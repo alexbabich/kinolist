@@ -1,5 +1,6 @@
 // moduler: 'testapp'
 
 export default {
-  moduler: 'testapp'
+  moduler: 'testapp',
+  defaultId: 0
 }

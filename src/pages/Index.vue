@@ -1,18 +1,28 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-input v-model="filmTitle" />
-    <q-list>
-      <q-item v-for="film in itemsFilms" :key="film.imdbID">
-        <q-item-side :image="film.Poster" />
-        <q-item-main>
-          <q-item-tile label>{{film.Title}}</q-item-tile>
-          <q-item-tile sublabel>{{film.Year}}</q-item-tile>
-        </q-item-main>
-        <q-item-side right icon="movie" />
-      </q-item>
-    </q-list>
-    <!-- Перебираем через цикл массив pages, чтобы вывести каждый номер страницы -->
-    {{itemsFilms}}
+  <q-page class="center">
+    <div class="row">
+      <div class="col-4">
+        <q-search v-model="filmTitle" />
+      </div>
+      <div class="col-4">
+        {{this.pageCount}}
+      </div>
+    </div>
+    <div class="row">
+      <q-list>
+        <q-item v-for="film in itemsFilms" :key="film.imdbID">
+          <q-item-side :image="film.Poster" />
+          <q-item-main>
+            <q-item-tile label><router-link :to="{ name: 'film', params: { id: film.imdbID }}">{{film.Title}}</router-link></q-item-tile>
+            <q-item-tile sublabel>{{film.Year}}</q-item-tile>
+          </q-item-main>
+          <q-item-side right icon="movie" />
+        </q-item>
+      </q-list>
+    </div>
+    <div class="row">
+      {{itemsFilms}}
+    </div>
   </q-page>
 </template>
 
@@ -35,8 +45,8 @@ export default {
     }
   },
   created () {
-    this.getFilms(this.page, this.filmTitle)
-    this.page = this.pageCount / 10
+    // this.getFilms(this.page, this.filmTitle)
+    // this.page = this.pageCount / 10
     // minPages: 1,
     // maxPages: this.pageCount / 10
   },
@@ -44,19 +54,15 @@ export default {
   },
   methods: {
     getFilms (pageIndex, filmName) {
-      console.log(pageIndex)
       if (pageIndex === 0 && pageIndex === null) {
         pageIndex = 1
       }
-
-      console.log(pageIndex)
       axios
         .get(this.$store.state.API.mainURL + `&s=` + filmName + `&page=` + pageIndex)
         .then(response => {
           if (response.data) {
             this.itemsFilms = response.data.Search
             this.pageCount = response.data.totalResults
-            console.log(pageIndex)
           }
         })
         .catch(response => {

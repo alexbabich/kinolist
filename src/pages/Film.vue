@@ -1,15 +1,19 @@
 <template>
     <q-page class="flex flex-center">
-        <q-list>
-            <q-item>
-                <q-item-side :image="info.Poster" />
-                <q-item-main>
-                    <q-item-tile label>{{info.Title}}</q-item-tile>
-                    <q-item-tile sublabel>{{info.Year}}</q-item-tile>
-                </q-item-main>
-                <q-item-side right icon="movie" />
-            </q-item>
-        </q-list>
+        <q-card inline style="width: 500px">
+            <q-card-media>
+                <img :src="info.Poster" />
+            </q-card-media>
+            <q-card-separator />
+            <q-card-title>
+                {{info.Title}}
+            </q-card-title>
+            <q-card-separator />
+            <q-card-main>
+                <p>{{info.Year}}</p>
+                <p class="text-faded">{{info.Plot}}</p>
+            </q-card-main>
+        </q-card>
         {{info}}
     </q-page>
 </template>
@@ -24,13 +28,22 @@ export default {
   name: 'Film',
   data () {
     return {
-      info: null
+      info: '',
+      filmId: this.$route.params.id
     }
   },
-  mounted () {
-    axios
-      .get(this.$store.state.API.mainURL + `&t=movie 43&plot=full`)
-      .then(response => (this.info = response.data))
+  methods: {
+    getFilms (filmId) {
+      axios
+        .get(this.$store.state.API.mainURL + `&i=` + filmId + `&plot=full`)
+        .then(response => (this.info = response.data))
+        .catch(response => {
+          console.log(response)
+        })
+    }
+  },
+  beforeMount () {
+    this.getFilms(this.filmId)
   }
 }
 </script>
