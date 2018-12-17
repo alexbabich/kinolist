@@ -8,16 +8,6 @@ const routes = [
       { path: '/film/:id', name: 'film', component: () => import('pages/Film.vue') }
     ]
   }
-  // ,
-  // {
-  //   path: '/film/:id',
-  //   name: 'film',
-  //   props: true,
-  //   component: () => import('layouts/MyLayout.vue'),
-  //   children: [
-  //     { path: '/film/:id', component: () => import('pages/Film.vue') }
-  //   ]
-  // }
 ]
 
 // Always leave this as last one

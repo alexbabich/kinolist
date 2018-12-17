@@ -34,8 +34,6 @@ export default {
       }
     }
   },
-  methods: {
-  },
   beforeMount () {
     console.log(this.$route.params.id)
   }

@@ -1,31 +1,20 @@
 <template>
   <q-page class="center">
     <div class="row">
-      <div class="col-4">
-        <q-search v-model="searchFilm" @input="isTyping = true" />
-      </div>
-      <div class="col-4">
-        {{this.totalResults}}
+      <div class="col-12">
+        <q-search v-model="searchFilm" @input="isTyping = true" :stack-label="'Total results:' + (totalResults|isEmpty)"/>
       </div>
     </div>
     <q-list>
-      <q-item v-for="film in itemsFilms" :key="film.imdbID" class="kp-film-item ">
-        <q-item-side v-if="film.Poster !== 'N/A'" :image="film.Poster" class="kp-film-poster"/>
+      <q-item v-for="film in orderedItemsFilms" :key="film.imdbID" class="kp-film-item ">
+        <q-item-side v-if="film.Poster !== 'N/A'" :image="film.Poster" class="kp-film-poster rounded" />
         <q-item-side v-else icon="movie" />
         <q-item-main>
           <q-item-tile label><router-link :to="{ name: 'film', params: { id: film.imdbID }}">{{film.Title}}</router-link></q-item-tile>
-          <q-item-tile sublabel>{{film.Year}}</q-item-tile>
+          <q-item-tile sublabel>{{film.Year}} (type: {{film.Type }})</q-item-tile>
         </q-item-main>
       </q-item>
     </q-list>
-    <div class="row">
-      <p>test array</p>
-      <br/>
-      {{itemsFilms}}
-    </div>
-    <!--<div class="row">
-      {{itemsFilms}}
-    </div>-->
   </q-page>
 </template>
 
@@ -40,7 +29,7 @@
     flex-wrap: wrap
 
   .kp-film-item
-    width: 25%
+    width: 200px
     display: inline-block
 
     .q-item-icon
@@ -51,10 +40,10 @@
 
     .kp-film-poster
       img
-        width: 100%
-      + .q-item-section
-        position: absolute
-        bottom: 0
+        width: auto
+        max-height: 150px
+        min-width: 75px
+        border-radius 5px
 </style>
 
 <script>
@@ -66,20 +55,26 @@ export default {
   data () {
     return {
       itemsFilms: [],
-      pageCount: null,
       page: 1,
       pages: [],
-      perPage: 10,
       searchFilm: '',
       isTyping: false,
       info: [],
-      totalResults: '',
+      totalResults: 0,
       isPoster: false
     }
   },
-  created () {
+  filters: {
+    isEmpty: (value) => {
+      if (value === undefined) {
+        return 0
+      }
+    }
   },
-  mounted () {
+  computed: {
+    orderedItemsFilms: function () {
+      return _.orderBy(this.itemsFilms, 'Year', 'desc') // TODO need to add different sorting for results
+    }
   },
   methods: {
     getFilms (filmName) {
@@ -87,6 +82,8 @@ export default {
         .get(this.$store.state.API.mainURL + `&s=` + filmName)
         .then(response => {
           if (response.data) {
+            this.itemsFilms = []
+            this.totalResults = response.data.totalResults
             for (let pageIndex = 1; pageIndex <= Math.ceil(response.data.totalResults / 10); pageIndex++) {
               axios
                 .get(this.$store.state.API.mainURL + `&s=` + filmName + `&page=` + pageIndex)
@@ -94,14 +91,6 @@ export default {
                   if (response.data) {
                     this.itemsFilms.push(...response.data.Search)
                   }
-
-                  var result = []
-                  this.itemsFilms.forEach(function (item) {
-                    if (result.indexOf(item) < 0) {
-                      result.push(item)
-                    }
-                  })
-                  this.itemsFilms = result
                 })
                 .catch(response => {
                   console.log(response)
@@ -114,15 +103,10 @@ export default {
         })
     }
   },
-  computed: {
-    // displayedPosts () {
-    //   return this.paginate(this.posts)
-    // }
-  },
   watch: {
     searchFilm: _.debounce(function () {
       this.isTyping = false
-    }, 2000),
+    }, 1000),
     isTyping: function (value) {
       if (!value) {
         this.getFilms(this.searchFilm)

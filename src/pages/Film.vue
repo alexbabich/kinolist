@@ -2,32 +2,43 @@
     <q-page class="flex flex-center">
         <div class="row">
             <q-btn
-                color="primary"
+                color="deep-orange"
                 @click="goBack"
                 label="go back to search"
+                class="kp-back-btn"
             />
         </div>
         <div class="row">
-            <q-card inline style="width: 500px">
-                <q-card-media>
-                    <img :src="info.Poster" />
-                </q-card-media>
-                <q-card-separator />
-                <q-card-title>
-                    {{info.Title}}
-                </q-card-title>
-                <q-card-separator />
-                <q-card-main>
-                    <p>{{info.Year}}</p>
-                    <p class="text-faded">{{info.Plot}}</p>
-                </q-card-main>
-            </q-card>
+            <div class="col-4 text-center">
+                <img :src="info.Poster" class="img-fluid kp-img-thumbnail" :alt="info.Poster"/>
+            </div>
+            <div class="col-8">
+                <p><b>{{info.Title}}</b></p>
+                <hr>
+                <p><b>Released:</b> {{info.Released}}</p>
+                <p><b>Runtime:</b> {{info.Runtime}}</p>
+                <p><b>Genre:</b> {{info.Genre}}</p>
+                <p><b>Country:</b> {{info.Country}}</p>
+                <p><b>Actors:</b> {{info.Actors}}</p>
+                <p><b>IMDB rating:</b><q-rating v-model="info.imdbRating" disable :max="10" icon="thumb_up" class="kp-raiting-wrapper"/></p>
+                <hr>
+                <p class="text-faded">{{info.Plot}}</p>
+            </div>
         </div>
-        {{info}}
     </q-page>
 </template>
 
-<style>
+<style lang="stylus">
+    .kp-back-btn
+      position absolute
+      top: -20px
+    .kp-img-thumbnail
+      width: auto
+      max-width: calc(100% - 20px)
+      margin: 10px
+    .kp-raiting-wrapper
+      font-size 1.6rem
+      color: red
 </style>
 
 <script>
@@ -37,7 +48,7 @@ export default {
   name: 'Film',
   data () {
     return {
-      info: '',
+      info: [],
       filmId: this.$route.params.id
     }
   },

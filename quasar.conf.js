@@ -50,7 +50,6 @@ module.exports = function (ctx) {
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
-        'QIcon',
         'QList',
         'QListHeader',
         'QItem',
@@ -61,11 +60,7 @@ module.exports = function (ctx) {
         'QPagination',
         'QInput',
         'QSearch',
-        'QCard',
-        'QCardTitle',
-        'QCardMain',
-        'QCardMedia',
-        'QCardSeparator'
+        'QRating'
       ],
       directives: [
         'Ripple'
