@@ -1,19 +1,28 @@
 <template>
     <q-page class="flex flex-center">
-        <q-card inline style="width: 500px">
-            <q-card-media>
-                <img :src="info.Poster" />
-            </q-card-media>
-            <q-card-separator />
-            <q-card-title>
-                {{info.Title}}
-            </q-card-title>
-            <q-card-separator />
-            <q-card-main>
-                <p>{{info.Year}}</p>
-                <p class="text-faded">{{info.Plot}}</p>
-            </q-card-main>
-        </q-card>
+        <div class="row">
+            <q-btn
+                color="primary"
+                @click="goBack"
+                label="go back to search"
+            />
+        </div>
+        <div class="row">
+            <q-card inline style="width: 500px">
+                <q-card-media>
+                    <img :src="info.Poster" />
+                </q-card-media>
+                <q-card-separator />
+                <q-card-title>
+                    {{info.Title}}
+                </q-card-title>
+                <q-card-separator />
+                <q-card-main>
+                    <p>{{info.Year}}</p>
+                    <p class="text-faded">{{info.Plot}}</p>
+                </q-card-main>
+            </q-card>
+        </div>
         {{info}}
     </q-page>
 </template>
@@ -40,6 +49,11 @@ export default {
         .catch(response => {
           console.log(response)
         })
+    },
+    goBack () {
+      window.history.length > 1
+        ? this.$router.go(-1)
+        : this.$router.push('/')
     }
   },
   beforeMount () {

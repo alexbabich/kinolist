@@ -4,14 +4,9 @@
       <q-toolbar color="primary">
         <q-toolbar-title>
           Kinopoint
-          <q-field :label="mess"></q-field>
+          <q-field :label="mess" float-label="What is your hotel?" v-model="text"></q-field>
         </q-toolbar-title>
       </q-toolbar>
-      <q-btn
-        color="primary"
-        @click="goBack"
-        label="go back to search"
-      />
     </q-layout-header>
 
     <q-page-container>
@@ -28,7 +23,8 @@ export default {
       mess: this.$store.state.defaultState.moduler,
       defaultId: this.$store.state.defaultState.defaultId,
       leftDrawerOpen: this.$q.platform.is.desktop,
-      filmId: this.$route.params.id
+      filmId: this.$route.params.id,
+      text: ''
     }
   },
   computed: {
@@ -39,11 +35,6 @@ export default {
     }
   },
   methods: {
-    goBack () {
-      window.history.length > 1
-        ? this.$router.go(-1)
-        : this.$router.push('/')
-    }
   },
   beforeMount () {
     console.log(this.$route.params.id)
