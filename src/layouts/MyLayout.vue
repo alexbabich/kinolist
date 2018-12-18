@@ -21,7 +21,6 @@ export default {
   data () {
     return {
       mess: this.$store.state.defaultState.moduler,
-      defaultId: this.$store.state.defaultState.defaultId,
       leftDrawerOpen: this.$q.platform.is.desktop,
       filmId: this.$route.params.id,
       text: ''

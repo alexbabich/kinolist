@@ -31,7 +31,8 @@
 <style lang="stylus">
     .kp-back-btn
       position absolute
-      top: -20px
+      top: -50px
+      z-index: 9999
     .kp-img-thumbnail
       width: auto
       max-width: calc(100% - 20px)

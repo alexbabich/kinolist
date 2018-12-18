@@ -2,7 +2,7 @@
   <q-page class="center">
     <div class="row">
       <div class="col-12">
-        <q-search v-model="searchFilm" @input="isTyping = true" :stack-label="'Total results:' + (totalResults|isEmpty)"/>
+        <q-search v-model="searchFilm" @input="isTyping = true" :stack-label="'Total results:' + (totalResults)"/>
       </div>
     </div>
     <q-list>
@@ -55,20 +55,10 @@ export default {
   data () {
     return {
       itemsFilms: [],
-      page: 1,
-      pages: [],
       searchFilm: '',
       isTyping: false,
-      info: [],
       totalResults: 0,
       isPoster: false
-    }
-  },
-  filters: {
-    isEmpty: (value) => {
-      if (value === undefined) {
-        return 0
-      }
     }
   },
   computed: {
@@ -83,7 +73,7 @@ export default {
         .then(response => {
           if (response.data) {
             this.itemsFilms = []
-            this.totalResults = response.data.totalResults
+            this.totalResults = response.data.totalResults === undefined ? '0' : response.data.totalResults
             for (let pageIndex = 1; pageIndex <= Math.ceil(response.data.totalResults / 10); pageIndex++) {
               axios
                 .get(this.$store.state.API.mainURL + `&s=` + filmName + `&page=` + pageIndex)
